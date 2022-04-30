@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Placement </title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+  function getId()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#updateModal" onclick="DeleteInfo('+value.id+');">'+value.id+'</button>';
+				   });
+			    $('#id').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  
+  function getType()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#updateModal" onclick="DeleteInfo('+value.type+');">'+value.type+'</button>';
+				   });
+			    $('#type').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  function getVacancy()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#updateModal" onclick="DeleteInfo('+value.vacancy+');">'+value.vacancy+'</button>';
+				   });
+			    $('#vacancy').html(placement);
+			 },
+			 type:'GET'  
+		 } );
+  }
+  
+  function getDescription()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#updateModal" onclick="DeleteInfo('+value.description+');">'+value.description+'</button>';
+				   });
+			    $('#description').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  
+  
+  function getData()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+			     console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<tr>';
+					  /*   placement+='<td> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.id+');">'+value.id+'</button></td>'; */
+					    placement+='<td>'+value.type+'</td>';
+					    placement+='<td>'+value.vacancy+'</td>';
+					    placement+='<td>'+value.description+'</td>';
+					  
+					    placement+='<td> <button class="btn btn-danger" onclick="deleteInfo('+value.id+');">delete</button> <td>';
+					    placement+='</tr>';
+					});
+			    $('#tbody').html(placement);
+			 },
+			 type:'GET'
+		 } );
+  }
+  
+  function getInfo(){
+	  var search=$("#search").val();
+	  $.ajax( 
+				 { 
+					 url:"/placement/"+search,
+					 success:function(data) 
+					 { 
+					            console.log("search data");
+					            var  placement='';
+					            placement+='<tr>';
+					           /*  placement+='<td> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+data.id+');">'+data.id+'</button></td>'; */
+					            placement+='<td>'+data.type+'</td>';
+					            placement+='<td>'+data.vacancy+'</td>';
+					            placement+='<td>'+data.description+'</td>';
+					     
+					            placement+='<td> <button class="btn btn-danger" onclick="deleteInfo('+data.id+');">delete</button> <td>'
+					            placement+='</tr>';
+					
+					    $('#tbody').html( placement);
+					  },
+					  type:'GET' 
+					 
+          });
+}
+  
+  
+  function deleteInfo(data){
+	   console.log(data);
+	   $.ajax( {
+		    type:"DELETE",
+		    url:"/placement/ "+ data, 
+		    contentType: "application/json",
+			
+			success:function(resp, status){
+				window.location.href = '/delete';
+				alert("deleted");
+			},
+			
+	});
+}
+  
+  </script>
+  
+</head>
+
+<body>
+  <main>
+    <div class="container text-center">
+      <h1 class="bg-light py-4 text-info">
+        <i class="fas fa-user-graduate"></i>  Welcome to Placement Details<br>
+         <button class="fas fa-user-edit btn btn-success" id="btn-create" onclick="getData();">Delete</button>
+      </h1>
+      <div class="d-flex justify-content-center">
+        <div class="row">
+        <div class="col-md-3">
+        <div class="dropdown">
+          <button class="fas fa-trash-alt btn btn-danger pull-right" onclick="getId();"> ID</button>
+          <div class="dropdown-content" id="id">
+          
+          </div>
+        </div>
+        </div>
+    <div class="col-md-3">
+    <div class="dropdown">
+      <button class="fas fa-trash-alt btn btn-danger" onclick="getType();">Type</button>
+      <div class="dropdown-content" id="type">
+             
+      </div>
+    </div>
+    </div>
+    <div class="col-md-3">
+      <div class="dropdown">
+        <button class="fas fa-trash-alt btn btn-danger" onclick="getVacancy();">Vacancy</button>
+        <div class="dropdown-content" id="Vacancy">
+             
+        </div>
+      </div>
+      </div>
+      <div class="col-md-3">
+        <div class="dropdown">
+          <button class="fas fa-trash-alt btn btn-danger" onclick="getDescription();">Description</button>
+          <div class="dropdown-content" id="description">
+           
+          </div>
+        </div>
+        </div>
+    </div>
+  </div>
+    <div class="d-flex justify-content-center">
+    </div>
+  
+  </div>
+  </main>
+  
+    <!--  Table -->
+      <div>
+        <table style="margin-right:200px;" class="table table-striped " id="myPlacementtable">
+          <thead>
+	            <tr>
+	              <th scope="col">Type</th>
+	              <th scope="col">Vacancy</th>
+	              <th scope="col">Description</th>
+	             
+	            </tr>
+          </thead>
+          <tbody id="tbody">  
+                   
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Button trigger modal -->
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+
+  <!-- Include Dexie -->
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+  <!-- Custom main file-->
+  <script src="../js/main.js" type="module"></script>
+</body>
+
+</html>

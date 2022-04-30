@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Placement </title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+  function getId()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.id+');">'+value.id+'</button>';
+				   });
+			    $('#id').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  
+  function getType()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.type+');">'+value.type+'</button>';
+				   });
+			    $('#type').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  function getVacancy()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.vacancy+');">'+value.vacancy+'</button>';
+				   });
+			    $('#vacancy').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  function getDescription()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+				 console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.description+');">'+value.description+'</button>';
+				   });
+			    $('#description').html(placement);
+			 },
+			 type:'GET' 
+		 } );
+  }
+  
+  function getUpdateInfo(id){
+	    $.get("/placement/" + id, function(data) {
+		console.log(data);
+		$('#id2').val(data.id);
+		$('#type2').val(data.type);
+		$('#vacancy2').val(data.vacancy);
+		$('#description2').val(data.description);
+
+	}); 
+}  
+  
+  function updateInfo() {
+		 var data = {}
+			data["type"] = $("#type2").val();
+			data["vacancy"] = $("#vacancy2").val();
+			data["description"] = $("#description2").val();
+	
+			
+			var id=$("#id2").val();
+			console.log(data+' '+id);
+			$.ajax( {
+				    url:"/placement/ "+id, 
+				    contentType: "application/json",
+				    data: JSON.stringify(data), 
+					type:"PUT",
+					dataType: 'json',
+					success:function(data){
+						window.location.href = '/update';
+						alert("updated");
+					},
+					error:function(resp,status){
+						alert("error");
+					}
+			});
+}
+  
+  
+  function getData()
+  {
+       $.ajax( 
+		 { 
+			 url:"/placement",
+			 success:function(data) 
+			 { 
+			     console.log(data);
+			     var placement='';
+				 $.each( data, function(key,value) 
+				   {
+					    console.log(value.id);
+					    placement+='<tr>';
+					    placement+='<td> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+value.id+');">'+value.id+'</button></td>';
+					    placement+='<td>'+value.type+'</td>';
+					    placement+='<td>'+value.vacancy+'</td>';
+					    placement+='<td>'+value.description+'</td>';
+					  
+					   /*  placement+='<td> <button class="btn btn-danger" onclick="deleteInfo('+value.id+');">delete</button> <td>'; */
+					    placement+='</tr>';
+					});
+			    $('#tbody').html(placement);
+			 },
+			 type:'GET'
+		 } );
+  }
+  
+  function getInfo(){
+	  var search=$("#search").val();
+	  $.ajax( 
+				 { 
+					 url:"/placement/"+search,
+					 success:function(data) 
+					 { 
+					            console.log("search data");
+					            var  placement='';
+					            placement+='<tr>';
+					            placement+='<td> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateModal" onclick="getUpdateInfo('+data.id+');">'+data.id+'</button></td>';
+					            placement+='<td>'+data.type+'</td>';
+					            placement+='<td>'+data.vacancy+'</td>';
+					            placement+='<td>'+data.description+'</td>';
+					     
+					           /*  placement+='<td> <button class="btn btn-danger" onclick="deleteInfo('+data.id+');">delete</button> <td>' */
+					            placement+='</tr>';
+					
+					    $('#tbody').html( placement);
+					  },
+					  type:'GET' 
+					 
+          });
+}
+  
+  </script>
+  
+</head>
+
+<body>
+  <main>
+    <div class="container text-center">
+      <h1 class="bg-light py-4 text-info">
+        <i class="fas fa-user-graduate"></i>  Welcome to Placement Details <br>
+         <button class="fas fa-user-edit btn btn-success" id="btn-create" onclick="getData();">Update</button>
+      </h1>
+      <div class="d-flex justify-content-center">
+        <div class="row">
+        <div class="col-md-3">
+        <div class="dropdown">
+          <button class="fas fa-upload btn btn-warning pull-right" onclick="getId();">ID</button>
+          <div class="dropdown-content" id="id">
+          
+          </div>
+        </div>
+        </div>
+    <div class="col-md-3">
+    <div class="dropdown">
+      <button class="fas fa-upload btn btn-warning" onclick="getType();">Type</button>
+      <div class="dropdown-content" id="type">
+             
+      </div>
+    </div>
+    </div>
+    <div class="col-md-3">
+      <div class="dropdown">
+        <button class="fas fa-upload btn btn-warning" onclick="getVacancy();">Vacancy</button>
+        <div class="dropdown-content" id="vacancy">
+             
+        </div>
+      </div>
+      </div>
+      <div class="col-md-3">
+        <div class="dropdown">
+          <button class="fas fa-upload btn btn-warning" onclick="getDescription();">Description</button>
+          <div class="dropdown-content" id="description">
+           
+          </div>
+        </div>
+        </div>
+    </div>
+  </div>
+    <div class="d-flex justify-content-center">
+      <img style="width: 45%;" src="static/img.jpg" alt="">
+    </div>
+  
+  </div>
+  </main>
+
+
+
+  <!--  Table -->
+      <div>
+        <table style="margin-right:200px;" class="table table-striped " id="myPlacementtable">
+          <thead>
+	            <tr>
+	              <th scope="col">ID</th>
+	              <th scope="col">Type</th>
+	              <th scope="col">Vacancy</th>
+	              <th scope="col">Description</th>
+	             
+	            </tr>
+          </thead>
+          <tbody id="tbody">  
+                   
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">  Update Page</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <input type="text" id="id2" name="id" class="form-control" autocomplete="off" placeholder="ID" readonly/><br>
+          <input type="text" id="type2" name="type" class="form-control" autocomplete="off" placeholder="Type" /><br>
+          <input type="text" id="vacancy2" name="vacancy" class="form-control" autocomplete="off" placeholder="Vacancy" /><br>
+          <input type="text" id="description2" name="description" class="form-control " autocomplete="off" placeholder="Description" /><br>
+         
+          <input style="margin-left: 10%; margin-right: 10%;" type="submit" value="update" class="btn btn-warning"  onclick='updateInfo();'/><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal End -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+
+  <!-- Include Dexie -->
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+  <!-- Custom main file-->
+  <script src="../js/main.js" type="module"></script>
+</body>
+
+</html>
